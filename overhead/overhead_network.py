@@ -3,7 +3,7 @@ from pandapower import plotting
 import math
 
 
-def network():
+def overhead_network():
     net = pp.create_empty_network()
 
     # LV Overhead 100mm
@@ -36,7 +36,7 @@ def network():
     pp.create_std_type(net, {"r_ohm_per_km": 1.273,
                              "x_ohm_per_km": 0,
                              "c_nf_per_km": 0,
-                             "max_i_ka": 1,
+                             "max_i_ka": 0.099,
                              "r0_ohm_per_km": 1.273,
                              "x0_ohm_per_km": 0,
                              "c0_nf_per_km": 0,
@@ -57,11 +57,11 @@ def network():
 
     # Transformer
     Transformer = pp.create_transformer_from_parameters(net, hv_bus=SubstationMVbus, lv_bus=SubstationLVbus, name="Dyn11",
-                                                        sn_mva=0.63, vn_hv_kv=11, vn_lv_kv=0.433,
+                                                        sn_mva=0.63, vn_hv_kv=11, vn_lv_kv=0.400,
                                                         vkr_percent=0.8571429, vk_percent=4, pfe_kw=5.4, i0_percent=0,
                                                         vk0_percent=3, vkr0_percent=0, shift_degree=330, tap_side="hv",
                                                         tap_step_percent=2.5, tap_neutral=3, tap_min=1, tap_max=5,
-                                                        tap_pos=5, mag0_rx=4.558264, mag0_percent=1.51942, vector_group="Dyn")
+                                                        tap_pos=5, mag0_rx=4.558264, mag0_percent=1.51942, vector_group="Dyn", )
 
     # Medium buses
     bus1 = pp.create_bus(net, vn_kv=0.4, name="Med_Bus1", in_service=True)
@@ -273,20 +273,35 @@ def network():
     return net
 
 
-#net = network()
-#
-#pp.runpp(net)
-#
+
+def run():
+    net = overhead_network()
+    pp.runpp(net)
+    print(net.res_bus)  # bus results
+    print(net.res_line.loc[net.res_line.loading_percent > 25])
+    #pp.to_excel(net, "overhead.xlsx")
+
+#run()
+
+
 #print(net.res_line.loading_percent.max())
+#print(net.res_bus.vm_pu.max())
+#print(net.res_bus.loc[net.res_bus.vm_pu > 1.02])
+
+
+
+
 #print(net.res_trafo.loading_percent.max())
-#print(net.res_line.loading_percent)
+#print(net.res_line.loading_percent.max())
 #print(net.bus)  # for bus info
 #print('\nbus info')
-#print(net.res_bus)  # bus results
+
+
+
+
 #print(net.res_line)
 #print('\nload info')
 #print(net.res_line)
-#pp.to_excel(net, "overhead.xlsx")
 
 
 #plotting.simple_plot(net, plot_loads=True)
