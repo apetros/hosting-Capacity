@@ -285,20 +285,14 @@ def overhead_network(power):
     for loadbus in list_of_loadbuses:
         pp.create_load_from_cosphi(net, bus=loadbus, sn_mva=power, cos_phi=0.85, mode="ind")
 
-    # Create PVs
-   # pp.create_sgens(net, buses=net.load.bus, p_mw=0.002, q_mvar=0, sn_mva=0.002)
 
-    # DiscreteTapControl(net, 0, 1, 1.05, side="hv", trafotype="2W",
-    #              tol=1e-3, in_service=True, order=0, drop_same_existing_ctrl=False,
-    #              matching_params=None)
     return net
 
 
 
 
-#
-# print(overhead_network(0.01))
-#
+
+
 def run():
     net = overhead_network(0.0003256)
     print(net.load.p_mw)
@@ -312,24 +306,3 @@ def run():
 run()
 
 
-# print(net.res_line.loading_percent.max())
-# print(net.res_bus.vm_pu.max())
-# print(net.res_bus.loc[net.res_bus.vm_pu > 1.02])
-
-
-# print(net.res_trafo.loading_percent.max())
-# print(net.res_line.loading_percent.max())
-# print(net.bus)  # for bus info
-# print('\nbus info')
-
-
-# print(net.res_line)
-# print('\nload info')
-# print(net.res_line)
-
-
-# plotting.simple_plot(net, plot_loads=True)
-
-# to_artere_final.to_artere(net, "ahk")
-
-# print(net.load.bus.values)

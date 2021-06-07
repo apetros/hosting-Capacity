@@ -12,9 +12,6 @@ def overhead_network():
                              "x_ohm_per_km": (0.06416027 * 10 ** -3) * math.pi * 50,
                              "c_nf_per_km": 0,
                              "max_i_ka": 0.271,
-                             # "r0_ohm_per_km": 0.554544,
-                             # "x0_ohm_per_km": 1.030687,
-                             # "c0_nf_per_km": 0,
                              "type": "ol",
                              "temperature_degree_celsius": 20,
 
@@ -25,9 +22,6 @@ def overhead_network():
                              "x_ohm_per_km": (0.06416027 * 10 ** -3) * math.pi * 50,
                              "c_nf_per_km": 0,
                              "max_i_ka": 0.181,
-                             # "r0_ohm_per_km": 0.554544,
-                             # "x0_ohm_per_km": 1.030687,
-                             # "c0_nf_per_km": 0,
                              "type": "ol",
                              "temperature_degree_celsius": 20,
                              }, name="LV Overhead 50mm Al", element="line"
@@ -281,8 +275,3 @@ def overhead_network():
 
     return net
 
-net = overhead_network()
-
-pp.runpp(net)
-
-print(net.res_line.i_ka * 1000)

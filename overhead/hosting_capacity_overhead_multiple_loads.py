@@ -31,7 +31,6 @@ julyLoadProfile = list(map(convert_to_sn_mva_with_cosf, julyLoadProfile))
 def violations(net):
     pp.runpp(net)
     if net.res_line.loading_percent.max() > 50:
-        #print("line overloading violation")
         print("max load" ,net.res_line.i_ka[0] * 1000)
         print("real power" ,net.res_line.p_from_mw[0] * 1000)
         print("reactive power" ,net.res_line.q_from_mvar[0] * 1000)
@@ -42,7 +41,6 @@ def violations(net):
         print("transformer overloading violation")
         return (True, "Transformer \n Overloading")
     elif net.res_bus.vm_pu.max() > 1.05:
-        #print("bus overvoltage violation")
         return (True, "Voltage \n Violation")
     else:
         return (False, None)
@@ -62,49 +60,41 @@ results = pd.DataFrame(columns=["installed", "violation"])
 results_list = []
 boxplot_results = []
 
-#for loadValue in julyLoadProfile:
-for i in range(iterations):
-    net = overhead_network_for_hosting_capacity_Multiple_Values.overhead_network(0.0003256)
-    installed_mw = 0
-    while 1:
-        violated, violation_type = violations(net)
-        if violated:
-            results.loc[i] = [installed_mw, violation_type]
-            break
-        else:
-            plant_size = get_plant_size_mw()
-            pp.create_sgen(net, chose_bus(net), p_mw=plant_size, q_mvar=0)
-            installed_mw += plant_size
+for loadValue in julyLoadProfile:
+    for i in range(iterations):
+        net = overhead_network_for_hosting_capacity_Multiple_Values.overhead_network(loadValue)
+        installed_mw = 0
+        while 1:
+            violated, violation_type = violations(net)
+            if violated:
+                results.loc[i] = [installed_mw, violation_type]
+                break
+            else:
+                plant_size = get_plant_size_mw()
+                pp.create_sgen(net, chose_bus(net), p_mw=plant_size, q_mvar=0)
+                installed_mw += plant_size
 
 
     boxplot_results.append(list(results.installed * 1000) )
 
     results_list.append(results.installed.mean() * 1000)
-    #print(results.installed.mean())
-#print(len(results_list))
-# -plant_size * tan(acos(0.95))
-# -(plant_size * math.tan(math.acos(0.95)))
 
 
-# plt.bar(time_steps, results_list, color=(0.2, 0.4, 0.6, 0.6))
-# plt.xlabel("Timesteps")
-# plt.ylabel("Installed Capacity [kW]")
-# plt.show()
-#
-# sns.boxplot(data=boxplot_results)
-# plt.xlabel("Timesteps")
-# plt.ylabel("Installed Capacity [kW]")
-# plt.show()
-#
-#
-# # %matplotlib inline
-# plt.rc('xtick', labelsize=18)  # fontsize of the tick labels
-# plt.rc('ytick', labelsize=18)  # fontsize of the tick labels
-# plt.rc('legend', fontsize=18)  # fontsize of the tick labels
-# plt.rc('axes', labelsize=20)  # fontsize of the tick labels
-# plt.rcParams['font.size'] = 20
-#
-# sns.set_style("whitegrid", {'axes.grid': True})
+
+
+sns.boxplot(data=boxplot_results)
+plt.xlabel("Timesteps")
+plt.ylabel("Installed Capacity [kW]")
+plt.show()
+
+# %matplotlib inline
+plt.rc('xtick', labelsize=18)  # fontsize of the tick labels
+plt.rc('ytick', labelsize=18)  # fontsize of the tick labels
+plt.rc('legend', fontsize=18)  # fontsize of the tick labels
+plt.rc('axes', labelsize=20)  # fontsize of the tick labels
+plt.rcParams['font.size'] = 20
+
+sns.set_style("whitegrid", {'axes.grid': True})
 
 fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
 ax = axes[0]

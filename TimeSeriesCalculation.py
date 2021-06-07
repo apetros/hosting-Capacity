@@ -13,18 +13,6 @@ from pandapower.control import ConstControl
 from overhead.overhead_network_for_TSS import overhead_network
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-#
-# july_LoadProfile_KW = [1.2251, 1.1889, 1.1659, 1.1424, 1.1121, 1.0664, 1.0177,
-#                        0.9787, 0.9319, 0.8726, 0.8687, 0.8282, 0.8256, 0.8413,
-#                        0.8467, 0.8799, 0.3488, 0.3024, 0.7927, 0.8057, 1.3021,
-#                        1.3152, 0.8152, 0.8374, 0.8920, 0.9799, 1.0045, 1.5035,
-#                        1.0536, 1.6084, 1.1734, 1.1716, 1.6798, 1.1834, 1.6657,
-#                        1.5762, 1.5898, 1.1184, 0.9874, 1.2971, 0.9336, 0.5368,
-#                        1.0927, 1.1165, 1.1036, 1.1186, 1.1660, 1.2237]
-#
-# july_PV_Production_Watt = [0, 0, 0, 0, 0, 0, 32.85, 32.85, 363.1, 363.1, 1290, 1290, 2176.8, 2176.8, 2839.4, 2839.4, 3269.25,
-#                       3269.25, 3475.1, 3475.1, 3527.45, 3527.45, 3376.05, 3376.45, 2864.2, 2864.2, 2315.6, 2315.6,
-#                       1466.85, 1466.85, 515.25, 515.25, 118, 118, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 
 july_LoadProfile_KW = [1.207, 1.1541, 1.0882, 0.9982, 0.9022, 0.8484, 0.8334,
@@ -61,7 +49,7 @@ def timeseries_example(output_dir):
     time_steps = range(0, n_timesteps)
 
     # 4. the output writer with the desired results to be stored to files.
-    #ow = create_output_writer(net, time_steps, output_dir=output_dir)
+    ow = create_output_writer(net, time_steps, output_dir=output_dir)
 
     # 5. the main time series function
     run_timeseries(net, time_steps)
@@ -99,7 +87,6 @@ def create_output_writer(net, time_steps, output_dir):
     ow.log_variable('res_line', 'i_ka')
     return ow
 
-#output_dir = os.path.join(tempfile.gettempdir(), "time_series_example")
 print("Results can be found in your local temp folder: {}".format(output_dir))
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)

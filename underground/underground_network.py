@@ -13,7 +13,6 @@ def underground_network():
                              "max_i_ka": 0.42,
                              "r0_ohm_per_km": 0.34838,
                              "x0_ohm_per_km": 1.2328,
-                             # "c0_nf_per_km": 0,
                              "type": "cs",
                              "temperature_degree_celsius": 20,
                              }, name="LV 300c", element="line"
@@ -212,15 +211,5 @@ def underground_network():
     return net
 
 
-net = underground_network()
-#print(net)
-pp.runpp(net)
 
-#
-print(net.res_bus)
-#print(net.res_line)
-#
-#plotting.simple_plot(net, plot_loads=True)
-
-#pp.to_excel(net, "underground.xlsx")
 

@@ -287,42 +287,4 @@ def overhead_network():
 
 
 
-#
-# print(overhead_network(0.01))
-#
-# def run():
-#     net = overhead_network(1)
-#     print(net.load.p_mw)
-#     print(net.sgen)
-#     print(net)
-#     pp.runpp(net)
-#     print(net.res_bus)  # bus results
-#     print(net.res_line.loc[net.res_line.loading_percent > 50])
-#     pp.to_excel(net, "overhead.xlsx")
-#
-# run()
-
-
-# print(net.res_line.loading_percent.max())
-# print(net.res_bus.vm_pu.max())
-# print(net.res_bus.loc[net.res_bus.vm_pu > 1.02])
-
-
-# print(net.res_trafo.loading_percent.max())
-# print(net.res_line.loading_percent.max())
-# print(net.bus)  # for bus info
-# print('\nbus info')
-
-
-# print(net.res_line)
-# print('\nload info')
-# print(net.res_line)
-
-
-# plotting.simple_plot(net, plot_loads=True)
-
-# to_artere_final.to_artere(net, "ahk")
-
-# print(net.load.bus.values)
-
 
