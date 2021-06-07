@@ -1,7 +1,7 @@
 import pandapower as pp
 from pandapower import plotting
 import math
-
+from pandapower.control import DiscreteTapControl
 
 def overhead_network():
     net = pp.create_empty_network()
@@ -45,9 +45,6 @@ def overhead_network():
                              }, name="LV Overhead 14mm", element="line"
                        )
 
-
-
-
     # Substation buses
     SubstationMVbus = pp.create_bus(net, vn_kv=11, name="SubMV_Terminal", in_service=True)
     SubstationLVbus = pp.create_bus(net, vn_kv=0.4, name="SubLV_Terminal", in_service=True)
@@ -56,12 +53,14 @@ def overhead_network():
     ExternalGrid = pp.create_ext_grid(net, bus=SubstationMVbus, vm_pu=1)
 
     # Transformer
-    Transformer = pp.create_transformer_from_parameters(net, hv_bus=SubstationMVbus, lv_bus=SubstationLVbus, name="Dyn11",
+    Transformer = pp.create_transformer_from_parameters(net, hv_bus=SubstationMVbus, lv_bus=SubstationLVbus,
+                                                        name="Dyn11",
                                                         sn_mva=0.63, vn_hv_kv=11, vn_lv_kv=0.400,
                                                         vkr_percent=0.8571429, vk_percent=4, pfe_kw=5.4, i0_percent=0,
-                                                        vk0_percent=3, vkr0_percent=0, shift_degree=330, tap_side="hv",
+                                                        vk0_percent=4, vkr0_percent=0, shift_degree=330, tap_side="hv",
                                                         tap_step_percent=2.5, tap_neutral=3, tap_min=1, tap_max=5,
-                                                        tap_pos=5, mag0_rx=4.558264, mag0_percent=1.51942, vector_group="Dyn", )
+                                                        tap_pos=3, mag0_rx=4.558264, mag0_percent=1.51942,
+                                                        vector_group="Dyn")
 
     # Medium buses
     bus1 = pp.create_bus(net, vn_kv=0.4, name="Med_Bus1", in_service=True)
@@ -74,14 +73,26 @@ def overhead_network():
     bus8 = pp.create_bus(net, vn_kv=0.4, name="Med_Bus8", in_service=True)
 
     # Medium Lines
-    LineM1 = pp.create_line(net, from_bus=SubstationLVbus, to_bus=bus1, length_km=0.100, std_type="LV Overhead 100mm Al",
+    LineM1 = pp.create_line(net, from_bus=SubstationLVbus, to_bus=bus1, length_km=0.100,
+                            std_type="LV Overhead 100mm Al",
                             name="LineM1", in_service=True)
-    LineM2 = pp.create_line(net, from_bus=bus1, to_bus=bus2, length_km=0.05, std_type="LV Overhead 100mm Al", name="LineM2",
+    #LineM1_B = pp.create_line(net, from_bus=SubstationLVbus, to_bus=bus1, length_km=0.100,
+       #                       std_type="LV Overhead 100mm Al",
+        #                      name="LineM1_B", in_service=True)
+    LineM2 = pp.create_line(net, from_bus=bus1, to_bus=bus2, length_km=0.05, std_type="LV Overhead 100mm Al",
+                            name="LineM2",
                             in_service=True)
+    #LineM2_B = pp.create_line(net, from_bus=bus1, to_bus=bus2, length_km=0.05, std_type="LV Overhead 100mm Al",
+     #                         name="LineM2_B",
+      #                        in_service=True)
     LineM3 = pp.create_line(net, from_bus=bus2, to_bus=bus3, length_km=0.025, std_type="LV Overhead 100mm Al",
                             name="LineM3", in_service=True)
+    #LineM3_B = pp.create_line(net, from_bus=bus2, to_bus=bus3, length_km=0.025, std_type="LV Overhead 100mm Al",
+     #                         name="LineM3_B", in_service=True)
     LineM4 = pp.create_line(net, from_bus=bus3, to_bus=bus4, length_km=0.025, std_type="LV Overhead 100mm Al",
                             name="LineM4", in_service=True)
+    #LineM4_B = pp.create_line(net, from_bus=bus3, to_bus=bus4, length_km=0.025, std_type="LV Overhead 100mm Al",
+     #                         name="LineM4_B", in_service=True)
     LineM5 = pp.create_line(net, from_bus=bus4, to_bus=bus5, length_km=0.100, std_type="LV Overhead 100mm Al",
                             name="LineM5", in_service=True)
     LineM6 = pp.create_line(net, from_bus=bus5, to_bus=bus6, length_km=0.050, std_type="LV Overhead 100mm Al",
@@ -90,7 +101,6 @@ def overhead_network():
                             name="LineM7", in_service=True)
     LineM8 = pp.create_line(net, from_bus=bus7, to_bus=bus8, length_km=0.025, std_type="LV Overhead 100mm Al",
                             name="LineM8", in_service=True)
-
 
     """     Buses, lines and loads from BUS1    """
     # buses
@@ -125,28 +135,29 @@ def overhead_network():
     bus21 = pp.create_bus(net, vn_kv=0.4, name="bus21", in_service=True)
     bus22 = pp.create_bus(net, vn_kv=0.4, name="bus22", in_service=True)
 
-    lineP5 = pp.create_line(net, from_bus=bus2, to_bus=bus21, name="lineP5", length_km=0.020, std_type="LV Overhead 14mm",
+    lineP5 = pp.create_line(net, from_bus=bus2, to_bus=bus21, name="lineP5", length_km=0.020,
+                            std_type="LV Overhead 14mm",
                             in_service=True)
-    lineP6 = pp.create_line(net, from_bus=bus2, to_bus=bus22, name="lineP6", length_km=0.020, std_type="LV Overhead 14mm",
+    lineP6 = pp.create_line(net, from_bus=bus2, to_bus=bus22, name="lineP6", length_km=0.020,
+                            std_type="LV Overhead 14mm",
                             in_service=True)
 
     load2 = pp.create_load_from_cosphi(net, bus=bus21, sn_mva=0.002, cos_phi=0.85, mode="ind")
     load3 = pp.create_load_from_cosphi(net, bus=bus22, sn_mva=0.002, cos_phi=0.85, mode="ind")
 
-
     """     Buses, lines and loads from BUS3    """
     bus31 = pp.create_bus(net, vn_kv=0.4, name="bus31", in_service=True)
     bus32 = pp.create_bus(net, vn_kv=0.4, name="bus32", in_service=True)
 
-    lineP7 = pp.create_line(net, from_bus=bus3, to_bus=bus31, length_km=0.020, name="lineP7", std_type="LV Overhead 14mm",
+    lineP7 = pp.create_line(net, from_bus=bus3, to_bus=bus31, length_km=0.020, name="lineP7",
+                            std_type="LV Overhead 14mm",
                             in_service=True)
-    lineP8 = pp.create_line(net, from_bus=bus3, to_bus=bus32, length_km=0.020, name="lineP8", std_type="LV Overhead 14mm",
+    lineP8 = pp.create_line(net, from_bus=bus3, to_bus=bus32, length_km=0.020, name="lineP8",
+                            std_type="LV Overhead 14mm",
                             in_service=True)
 
     load27 = pp.create_load_from_cosphi(net, bus=bus31, sn_mva=0.002, cos_phi=0.85, mode="ind")
     load4 = pp.create_load_from_cosphi(net, bus=bus32, sn_mva=0.002, cos_phi=0.85, mode="ind")
-
-
 
     """     Buses, lines and loads from BUS4    """
     bus42 = pp.create_bus(net, vn_kv=0.4, name="bus42", in_service=True)
@@ -155,7 +166,8 @@ def overhead_network():
     bus41_2 = pp.create_bus(net, vn_kv=0.4, name="bus41_2", in_service=True)
     bus41_1 = pp.create_bus(net, vn_kv=0.4, name="bus41_1", in_service=True)
 
-    lineP10 = pp.create_line(net, from_bus=bus4, to_bus=bus42, name="lineP10", length_km=0.020, std_type="LV Overhead 14mm",
+    lineP10 = pp.create_line(net, from_bus=bus4, to_bus=bus42, name="lineP10", length_km=0.020,
+                             std_type="LV Overhead 14mm",
                              in_service=True)
     lineT21 = pp.create_line(net, from_bus=bus4, to_bus=bus41, name="lineT21", length_km=0.035,
                              std_type="LV Overhead 50mm Al", in_service=True)
@@ -172,8 +184,6 @@ def overhead_network():
     load11 = pp.create_load_from_cosphi(net, bus=bus41_1, sn_mva=0.002, cos_phi=0.85, mode="ind")
     load22 = pp.create_load_from_cosphi(net, bus=bus412, sn_mva=0.002, cos_phi=0.85, mode="ind")
     load23 = pp.create_load_from_cosphi(net, bus=bus412, sn_mva=0.002, cos_phi=0.85, mode="ind")
-
-
 
     """     Buses, lines and loads from BUS5    """
     # buses
@@ -192,7 +202,8 @@ def overhead_network():
     lineT32 = pp.create_line(net, from_bus=bus51, to_bus=bus512, name="lineT32", length_km=0.035,
                              std_type="LV Overhead 50mm Al", in_service=True)
 
-    lineP15 = pp.create_line(net, from_bus=bus5, to_bus=bus52, name="lineP15", length_km=0.020, std_type="LV Overhead 14mm",
+    lineP15 = pp.create_line(net, from_bus=bus5, to_bus=bus52, name="lineP15", length_km=0.020,
+                             std_type="LV Overhead 14mm",
                              in_service=True)
     lineP16 = pp.create_line(net, from_bus=bus51, to_bus=bus51_1, name="lineP16", length_km=0.020,
                              std_type="LV Overhead 14mm", in_service=True)
@@ -210,34 +221,29 @@ def overhead_network():
     load12 = pp.create_load_from_cosphi(net, bus=bus512_1, sn_mva=0.002, cos_phi=0.85, mode="ind")
     load6 = pp.create_load_from_cosphi(net, bus=bus512_2, sn_mva=0.002, cos_phi=0.85, mode="ind")
 
-
-
     """     Buses, lines and loads from BUS6    """
     # buses
     bus61 = pp.create_bus(net, vn_kv=0.4, name="bus61", in_service=True)
     bus62 = pp.create_bus(net, vn_kv=0.4, name="bus62", in_service=True)
 
     # lines
-    lineP20 = pp.create_line(net, from_bus=bus6, to_bus=bus61, name="lineP20", length_km=0.020, std_type="LV Overhead 14mm",
+    lineP20 = pp.create_line(net, from_bus=bus6, to_bus=bus61, name="lineP20", length_km=0.020,
+                             std_type="LV Overhead 14mm",
                              in_service=True)
-    lineP21 = pp.create_line(net, from_bus=bus6, to_bus=bus62, name="lineP21", length_km=0.020, std_type="LV Overhead 14mm",
+    lineP21 = pp.create_line(net, from_bus=bus6, to_bus=bus62, name="lineP21", length_km=0.020,
+                             std_type="LV Overhead 14mm",
                              in_service=True)
 
     # Loads
     load7 = pp.create_load_from_cosphi(net, bus=bus62, sn_mva=0.002, cos_phi=0.85, mode="ind")
     load8 = pp.create_load_from_cosphi(net, bus=bus61, sn_mva=0.002, cos_phi=0.85, mode="ind")
 
-
-
-
     """     Buses, lines and loads from BUS7    """
     bus71 = pp.create_bus(net, vn_kv=0.4, name="bus71", in_service=True)
-    lineP22 = pp.create_line(net, from_bus=bus7, to_bus=bus71, name="lineP22", length_km=0.020, std_type="LV Overhead 14mm",
+    lineP22 = pp.create_line(net, from_bus=bus7, to_bus=bus71, name="lineP22", length_km=0.020,
+                             std_type="LV Overhead 14mm",
                              in_service=True)
     load1 = pp.create_load_from_cosphi(net, bus=bus71, sn_mva=0.002, cos_phi=0.85, mode="ind")
-
-
-
 
     """     Buses, lines and loads from BUS8    """
     # buses
@@ -249,9 +255,11 @@ def overhead_network():
     bus83_2 = pp.create_bus(net, vn_kv=0.4, name="bus83_2", in_service=True)
 
     # lines
-    lineP23 = pp.create_line(net, from_bus=bus8, to_bus=bus81, name="lineP23", length_km=0.020, std_type="LV Overhead 14mm",
+    lineP23 = pp.create_line(net, from_bus=bus8, to_bus=bus81, name="lineP23", length_km=0.020,
+                             std_type="LV Overhead 14mm",
                              in_service=True)
-    lineP24 = pp.create_line(net, from_bus=bus8, to_bus=bus82, name="lineP24", length_km=0.020, std_type="LV Overhead 14mm",
+    lineP24 = pp.create_line(net, from_bus=bus8, to_bus=bus82, name="lineP24", length_km=0.020,
+                             std_type="LV Overhead 14mm",
                              in_service=True)
     lineP25 = pp.create_line(net, from_bus=bus83, to_bus=bus83_1, name="lineP25", length_km=0.020,
                              std_type="LV Overhead 14mm", in_service=True)
@@ -270,42 +278,51 @@ def overhead_network():
     load17 = pp.create_load_from_cosphi(net, bus=bus834, sn_mva=0.002, cos_phi=0.85, mode="ind")
     load18 = pp.create_load_from_cosphi(net, bus=bus834, sn_mva=0.002, cos_phi=0.85, mode="ind")
 
+
+    # Create PVs
+    pp.create_sgens(net, buses=net.load.bus, p_mw=0.005, q_mvar=0, sn_mva=0.005)
+
     return net
 
 
 
-def run():
-    net = overhead_network()
-    pp.runpp(net)
-    print(net.res_bus)  # bus results
-    print(net.res_line.loc[net.res_line.loading_percent > 25])
-    #pp.to_excel(net, "overhead.xlsx")
 
-#run()
-
-
-#print(net.res_line.loading_percent.max())
-#print(net.res_bus.vm_pu.max())
-#print(net.res_bus.loc[net.res_bus.vm_pu > 1.02])
-
-
-
-
-#print(net.res_trafo.loading_percent.max())
-#print(net.res_line.loading_percent.max())
-#print(net.bus)  # for bus info
-#print('\nbus info')
+#
+# print(overhead_network(0.01))
+#
+# def run():
+#     net = overhead_network(1)
+#     print(net.load.p_mw)
+#     print(net.sgen)
+#     print(net)
+#     pp.runpp(net)
+#     print(net.res_bus)  # bus results
+#     print(net.res_line.loc[net.res_line.loading_percent > 50])
+#     pp.to_excel(net, "overhead.xlsx")
+#
+# run()
 
 
+# print(net.res_line.loading_percent.max())
+# print(net.res_bus.vm_pu.max())
+# print(net.res_bus.loc[net.res_bus.vm_pu > 1.02])
 
 
-#print(net.res_line)
-#print('\nload info')
-#print(net.res_line)
+# print(net.res_trafo.loading_percent.max())
+# print(net.res_line.loading_percent.max())
+# print(net.bus)  # for bus info
+# print('\nbus info')
 
 
-#plotting.simple_plot(net, plot_loads=True)
+# print(net.res_line)
+# print('\nload info')
+# print(net.res_line)
 
-#to_artere_final.to_artere(net, "ahk")
 
-#print(net.load.bus.values)
+# plotting.simple_plot(net, plot_loads=True)
+
+# to_artere_final.to_artere(net, "ahk")
+
+# print(net.load.bus.values)
+
+

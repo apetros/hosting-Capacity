@@ -9,7 +9,7 @@ def underground_network():
     # LV 300c AI 3,5-C
     pp.create_std_type(net, {"r_ohm_per_km": 0.0958,
                              "x_ohm_per_km": 0.07,
-                             "c_nf_per_km": 0,
+                             "c_nf_per_km": 330,        #0.33μF,330
                              "max_i_ka": 0.42,
                              "r0_ohm_per_km": 0.34838,
                              "x0_ohm_per_km": 1.2328,
@@ -27,7 +27,7 @@ def underground_network():
                              "r0_ohm_per_km": 0.554544,
                              "x0_ohm_per_km": 1.030687,
                              "c0_nf_per_km": 0,
-                             "type": "cs",
+                             "type": "ol",
                              "temperature_degree_celsius": 20,
                              }, name="LV 100mm", element="line"
                        )
@@ -41,7 +41,7 @@ def underground_network():
                              "r0_ohm_per_km": 1.227056,
                              "x0_ohm_per_km": 0,
                              "c0_nf_per_km": 0,
-                             "type": "cs",
+                             "type": "ol",
                              "temperature_degree_celsius": 20,
                              }, name="LV 22mm", element="line"
                        )
@@ -103,10 +103,8 @@ def underground_network():
     Line12_2 = pp.create_line(net, from_bus=bus12, to_bus=bus12_2, length_km=0.014, name="Line2_2", std_type="LV 22mm", in_service=True)
 
     # lines from bus13 to loads
-    Line13_1 = pp.create_line(net, from_bus=bus13, to_bus=bus13_1, length_km=0.014, name="Line3_1",
-                             std_type="LV 22mm", in_service=True)
-    Line13_2 = pp.create_line(net, from_bus=bus13, to_bus=bus13_2, length_km=0.014, name="Line3_2",
-                             std_type="LV 22mm", in_service=True)
+    Line13_1 = pp.create_line(net, from_bus=bus13, to_bus=bus13_1, length_km=0.014, name="Line3_1", std_type="LV 22mm", in_service=True)
+    Line13_2 = pp.create_line(net, from_bus=bus13, to_bus=bus13_2, length_km=0.014, name="Line3_2", std_type="LV 22mm", in_service=True)
 
 
     # loads
@@ -215,13 +213,14 @@ def underground_network():
 
 
 net = underground_network()
-print(net)
+#print(net)
 pp.runpp(net)
+
 #
 print(net.res_bus)
-print(net.res_line)
+#print(net.res_line)
 #
-# plotting.simple_plot(net, plot_loads=True)
+#plotting.simple_plot(net, plot_loads=True)
 
 #pp.to_excel(net, "underground.xlsx")
 

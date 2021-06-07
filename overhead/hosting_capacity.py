@@ -4,9 +4,9 @@ from numpy.random import normal
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from underground.underground_network import underground_network
-import math
 import warnings
+import math
+from overhead import overhead_network_Simple
 
 warnings.filterwarnings("ignore")
 
@@ -14,17 +14,10 @@ warnings.filterwarnings("ignore")
 def violations(net):
     pp.runpp(net)
     if net.res_line.loading_percent.max() > 50:
-        print("line overloading violation")
-        print("max load" ,net.res_line.i_ka[0] * 1000)
-        print("real power" ,net.res_line.p_from_mw[0] * 1000)
-        print("reactive power" ,net.res_line.q_from_mvar[0] * 1000)
-        print()
         return (True, "Line \n Overloading")
     elif net.res_trafo.loading_percent.max() > 50:
-        print("transformer overloading violation")
         return (True, "Transformer \n Overloading")
     elif net.res_bus.vm_pu.max() > 1.05:
-        print("bus overvoltage violation")
         return (True, "Voltage \n Violation")
     else:
         return (False, None)
@@ -38,26 +31,40 @@ def get_plant_size_mw():
     return round(normal(loc=0.005, scale=0.001), 3)
 
 
-
-iterations = 50
+iterations = 10
 results = pd.DataFrame(columns=["installed", "violation"])
-results_installed = []
-for i in range(iterations):
-    net = underground_network()
-    installed_mw = 0
-    while 1:
-        violated, violation_type = violations(net)
-        if violated:
-            results.loc[i] = [installed_mw, violation_type]
-            # results_installed.append(results["installed"])
-            break
-        else:
-            plant_size = get_plant_size_mw()
-            pp.create_sgen(net, chose_bus(net), p_mw=plant_size, q_mvar=0)
-            installed_mw += plant_size
+timesteps = 5
+time_steps = []
 
+for number in range(timesteps):
+    time_steps.append((number))
 
-print(results.installed)
+df = pd.DataFrame(columns=["results"])
+for x in range(timesteps):
+    for i in range(iterations):
+        # net = load_network()
+        net = overhead_network_Simple.overhead_network()
+        installed_mw = 0
+        while 1:
+            violated, violation_type = violations(net)
+            if violated:
+                results.loc[i] = [installed_mw, violation_type]
+                break
+            else:
+                plant_size = get_plant_size_mw()
+                pp.create_sgen(net, chose_bus(net), p_mw=plant_size, q_mvar=-(plant_size * math.tan(math.acos(0.95))))
+
+    df.loc[x] = [results.installed]
+#installed_mw += plant_size
+
+print(results)
+print("mean:", results.mean())
+print("max: ", results.max())
+print("min:", results.min())
+
+# -plant_size * tan(acos(0.95))
+# -(plant_size * math.tan(math.acos(0.95)))
+
 
 # %matplotlib inline
 plt.rc('xtick', labelsize=18)  # fontsize of the tick labels
@@ -82,6 +89,6 @@ plt.rcParams['font.size'] = 20
 # sns.despine()
 # plt.tight_layout()
 
-# plt.bar(list, loadprofile, color=(0.2, 0.4, 0.6, 0.6))
-#
-# plt.show()
+
+sns.boxplot(data=df.results)
+plt.show()
