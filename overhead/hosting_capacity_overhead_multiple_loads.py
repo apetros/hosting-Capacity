@@ -81,33 +81,9 @@ for loadValue in julyLoadProfile:
 
 
 
-
+# Multiple boxplots
 sns.boxplot(data=boxplot_results)
 plt.xlabel("Timesteps")
 plt.ylabel("Installed Capacity [kW]")
 plt.show()
 
-# %matplotlib inline
-plt.rc('xtick', labelsize=18)  # fontsize of the tick labels
-plt.rc('ytick', labelsize=18)  # fontsize of the tick labels
-plt.rc('legend', fontsize=18)  # fontsize of the tick labels
-plt.rc('axes', labelsize=20)  # fontsize of the tick labels
-plt.rcParams['font.size'] = 20
-
-sns.set_style("whitegrid", {'axes.grid': True})
-
-fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
-ax = axes[0]
-sns.boxplot(data=results_list * 1000, width=.1, ax=ax, orient="v")
-ax.set_xticklabels([""])
-ax.set_ylabel("Installed Capacity [kW]")
-
-ax = axes[1]
-ax.axis("equal")
-results.violation.value_counts().plot(kind="pie", ax=ax, autopct=lambda x: "%.0f %%" % x)
-ax.set_ylabel("")
-ax.set_xlabel("")
-sns.despine()
-plt.tight_layout()
-
-plt.show()
