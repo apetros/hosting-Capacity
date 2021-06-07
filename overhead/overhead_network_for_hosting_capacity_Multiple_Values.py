@@ -1,7 +1,5 @@
 import pandapower as pp
-from pandapower import plotting
 import math
-from pandapower.control import DiscreteTapControl
 
 def overhead_network(power):
     net = pp.create_empty_network()
@@ -11,9 +9,6 @@ def overhead_network(power):
                              "x_ohm_per_km": (0.06416027 * 10 ** -3) * math.pi * 50,
                              "c_nf_per_km": 0,
                              "max_i_ka": 0.271,
-                             # "r0_ohm_per_km": 0.554544,
-                             # "x0_ohm_per_km": 1.030687,
-                             # "c0_nf_per_km": 0,
                              "type": "ol",
                              "temperature_degree_celsius": 20,
 
@@ -24,9 +19,6 @@ def overhead_network(power):
                              "x_ohm_per_km": (0.06416027 * 10 ** -3) * math.pi * 50,
                              "c_nf_per_km": 0,
                              "max_i_ka": 0.181,
-                             # "r0_ohm_per_km": 0.554544,
-                             # "x0_ohm_per_km": 1.030687,
-                             # "c0_nf_per_km": 0,
                              "type": "ol",
                              "temperature_degree_celsius": 20,
                              }, name="LV Overhead 50mm Al", element="line"
@@ -280,11 +272,9 @@ def overhead_network(power):
 
     list_of_loadbuses = [11, 12, 14, 15, 16, 17, 18, 19, 20, 23, 24, 22, 22, 25, 28, 29, 30, 31, 33, 32, 34, 35, 36, 39,
                          40, 38, 38]
-    #pp.create_loads(net, buses=list_of_loadbuses, p_mw={power})
 
     for loadbus in list_of_loadbuses:
         pp.create_load_from_cosphi(net, bus=loadbus, sn_mva=power, cos_phi=0.85, mode="ind")
-
 
     return net
 
@@ -293,16 +283,5 @@ def overhead_network(power):
 
 
 
-def run():
-    net = overhead_network(0.0003256)
-    print(net.load.p_mw)
-    print(net.sgen)
-    print(net)
-    pp.runpp(net)
-    print(net.res_bus)  # bus results
-    print(net.res_line.loc[net.res_line.loading_percent > 50])
-    pp.to_excel(net, "overhead.xlsx")
-
-run()
 
 
