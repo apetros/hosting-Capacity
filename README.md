@@ -1,7 +1,13 @@
 # hosting-Capacity 
+In this project I created a low voltage network of Electric Authority of Cyprus. 
+Using proper algorithms I investigated the network`s behavior under the impact of PV penetration. 
+
+I also calculated the maximum hosting capacity for the current network 
 
 
-In this project I`ve created a Low voltage distribution network of Electric Authority of Cyprus. 
 
-Using an algorithm taken from pandapower ducumentation I will examine the behavior of the system under the impact of PV
-penetration and how many kW it can host. 
+Time Series Calculation algorithm: 
+https://github.com/e2nIEE/pandapower/blob/develop/tutorials/time_series.ipynb
+
+Hosting Capacity algorithm:
+https://github.com/e2nIEE/pandapower/blob/develop/tutorials/hosting_capacity.ipynb
