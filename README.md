@@ -30,7 +30,7 @@ Here you must insert a list of load values and run the hosting capacity once for
 4) overhead_network_for_TSS.py -> This is the overhead network for time series calculation. 
 In this network i have installed a static generator in each load. A static generators represents a PV system. The controller of the TSS algorithm will change the value of the PV system in each timestep. 
 
-5)overhead_network_for_hosting_capacity_Multiple_Values.py -> This is the network for calculation hosting capacity for multiple values. 
+5) overhead_network_for_hosting_capacity_Multiple_Values.py -> This is the network for calculation hosting capacity for multiple values. 
 This network is used from the file "hosting_capacity_overhead_multiple_loads". It is different from overhead_network_simple because it accepts a value as parameter. This parameter represents the value of load for the consumers. 
 
 In the underground folder you will find: 
