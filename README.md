@@ -39,5 +39,14 @@ In the underground folder you will find:
 
 
 
-Required Software: Pandapower 
-https://www.pandapower.org/
+######################## Required software ########################
+
+1) ARTERE: https://people.montefiore.uliege.be/vct/software.html Check for downloads 
+2) Pandapower: http://www.pandapower.org/
+3) Python installed in your computer  
+Ι strongly recomend PyCharm as IDE. Else you can use Jupiter Notebook 
+* Download PyCharm: https://www.jetbrains.com/pycharm/ 
+* Download Anaconda: https://www.anaconda.com/
+* Down load Python: https://www.python.org/downloads/ 
+* Install pandapower: Open a cmd and type  pip install pandapower 
+* Then Open pycharm and press Ctrl + alt + S, go to project -> python interpeter, select python interpeter and pres + to add Pandapower in your project 
